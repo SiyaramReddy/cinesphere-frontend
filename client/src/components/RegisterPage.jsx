@@ -168,53 +168,66 @@ const RegisterPage = () => {
 
               {/* Gender Field */}
               <FormControl fullWidth variant="outlined" margin="normal">
-                <InputLabel style={{ color: theme.palette.text.secondary }}>Gender</InputLabel>
-                <Select
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                  label="Gender"
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': {
-                        borderColor: theme.palette.primary.main,
-                      },
-                      '&:hover fieldset': {
-                        borderColor: theme.palette.primary.light,
-                      },
-                      '&.Mui-focused fieldset': {
-                        borderColor: theme.palette.primary.dark,
-                      },
-                    },
-                  }}
-                >
-                  
-<MenuItem
-  value="M"
-  sx={{
-    backgroundColor: 'black',
-    color: 'white',
-    '&:hover': {
-      backgroundColor: '#333', // Slightly lighter black when hovered
-    },
-  }}
->
-  Male
-</MenuItem>
-<MenuItem
-  value="F"
-  sx={{
-    backgroundColor: 'black',
-    color: 'white',
-    '&:hover': {
-      backgroundColor: '#333', // Slightly lighter black when hovered
-    },
-  }}
->
-  Female
-</MenuItem>
+  <InputLabel style={{ color: theme.palette.text.secondary }}>Gender</InputLabel>
+  <Select
+    value={gender}
+    onChange={(e) => setGender(e.target.value)}
+    label="Gender"
+    sx={{
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: theme.palette.primary.main,
+        },
+        '&:hover fieldset': {
+          borderColor: theme.palette.primary.light,
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: theme.palette.primary.dark,
+        },
+      },
+    }}
+  >
+    <MenuItem
+      value="M"
+      sx={{
+        backgroundColor: 'black',
+        color: 'white',
+        '&.Mui-selected': {
+          backgroundColor: 'black', // Consistent black background when selected
+          color: 'white',
+        },
+        '&.Mui-selected:hover': {
+          backgroundColor: '#333', // Slightly lighter black when hovered and selected
+        },
+        '&:hover': {
+          backgroundColor: '#333', // Slightly lighter black when hovered
+        },
+      }}
+    >
+      Male
+    </MenuItem>
+    <MenuItem
+      value="F"
+      sx={{
+        backgroundColor: 'black',
+        color: 'white',
+        '&.Mui-selected': {
+          backgroundColor: 'black', // Consistent black background when selected
+          color: 'white',
+        },
+        '&.Mui-selected:hover': {
+          backgroundColor: '#333', // Slightly lighter black when hovered and selected
+        },
+        '&:hover': {
+          backgroundColor: '#333', // Slightly lighter black when hovered
+        },
+      }}
+    >
+      Female
+    </MenuItem>
+  </Select>
+</FormControl>
 
-                </Select>
-              </FormControl>
               {/* Submit Button */}
               <Button
                 fullWidth
