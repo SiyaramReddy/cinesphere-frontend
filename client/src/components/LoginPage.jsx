@@ -1,85 +1,117 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, Box, Typography, Container } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-
-// Create a custom theme with Tiffany Blue palette
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#0abab5', // Tiffany Blue
-      light: '#5fe2db', // Light Tiffany Blue
-      dark: '#0a8680', // Dark Tiffany Blue
-    },
-    background: {
-      default: '#000000', // Black background
-    },
-    text: {
-      primary: '#ffffff', // White text
-      secondary: '#0abab5', // Tiffany Blue text
-    },
-  },
-  typography: {
-    fontFamily: 'Roboto, sans-serif',
-  },
-});
+import { Link, useNavigate } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+import { lightTheme, darkTheme } from '../utilities/theme/theme'; // Import themes
+import Header from '../utilities/Header'; // Import Header component
+import { useTheme } from '../utilities/theme/ThemeContext'; // Import useTheme from global context
+import axios from 'axios';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
+  const { isDarkMode, toggleTheme } = useTheme(); // Access theme context
+  const navigate = useNavigate(); // Use navigate hook to redirect after login
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  const handleSubmit = (e) => {
+  // Check if user is already authenticated (you can replace this with your auth logic)
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem('token'); // Example check (you can replace with your auth check logic)
+    if (isAuthenticated) {
+      navigate('/dashboard'); // Redirect to home/dashboard if already logged in
+    }
+  }, [navigate]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Email:', email);
-    console.log('Password:', password);
+    setError('');
+    setSuccess('');
+
+    // Validation: Check if fields are filled
+    if (!username || !password) {
+      setError('Please fill in all fields.');
+      return;
+    }
+
+    try {
+      // Send login request to the backend
+      const response = await axios.post('http://localhost:5000/auth/login', {
+        username,
+        password
+      });
+
+      console.log(response); // Log the response for debugging
+      setSuccess('Login successful! Redirecting...');
+      
+      // Store authentication token in localStorage (or cookies/session)
+      localStorage.setItem('token', response.data.token);
+
+      // Redirect to a different page (e.g., home/dashboard) upon success
+      setTimeout(() => navigate('/dashboard'), 1000); // Redirect after 2 seconds
+    } catch (err) {
+      console.error('Login error:', err);
+      setError(
+        err.response?.data?.error || 'An unexpected error occurred. Please try again.'
+      );
+    }
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+      <Header isDarkMode={isDarkMode} onToggleTheme={toggleTheme} />
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-          bgcolor: 'background.default',
-          color: 'text.primary',
+          minHeight: "90vh",
+          bgcolor: "background.default",
+          color: "text.primary",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          marginTop: 0,
         }}
       >
-        <Container maxWidth="xs" sx={{ padding: 3 }}>
+        <Container maxWidth="xs" sx={{ paddingTop: 0 }}>
           <Box
             sx={{
-              padding: 3,
-              backgroundColor: '#1a1a1a', // Dark background for card
-              borderRadius: '8px',
+              padding: 2,
+              backgroundColor: isDarkMode ? "#1a1a1a" : "#f4f4f4",
+              borderRadius: "8px",
               boxShadow: 3,
             }}
           >
             <Typography variant="h5" align="center" sx={{ marginBottom: 2 }}>
               Login to CineSphere
             </Typography>
+            {error && (
+              <Typography
+                color="error"
+                variant="body2"
+                align="center"
+                sx={{ marginBottom: 2 }}
+              >
+                {error}
+              </Typography>
+            )}
+            {success && (
+              <Typography
+                color="primary"
+                variant="body2"
+                align="center"
+                sx={{ marginBottom: 2, color: "#28a745" }}
+              >
+                {success}
+              </Typography>
+            )}
             <form onSubmit={handleSubmit}>
               <TextField
                 fullWidth
-                label="Email"
+                label="Username"
                 variant="outlined"
                 margin="normal"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                InputLabelProps={{ style: { color: theme.palette.text.secondary } }}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: theme.palette.primary.main,
-                    },
-                    '&:hover fieldset': {
-                      borderColor: theme.palette.primary.light,
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: theme.palette.primary.dark,
-                    },
-                  },
-                }}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
               <TextField
                 fullWidth
@@ -89,42 +121,27 @@ const LoginPage = () => {
                 margin="normal"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                InputLabelProps={{ style: { color: theme.palette.text.secondary } }}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: theme.palette.primary.main,
-                    },
-                    '&:hover fieldset': {
-                      borderColor: theme.palette.primary.light,
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: theme.palette.primary.dark,
-                    },
-                  },
-                }}
               />
               <Button
                 fullWidth
                 variant="contained"
-                sx={{
-                  marginTop: 2,
-                  bgcolor: theme.palette.primary.main,
-                  '&:hover': {
-                    bgcolor: theme.palette.primary.dark,
-                  },
-                }}
+                color="primary"
+                sx={{ marginTop: 2 }}
                 type="submit"
               >
                 Login
               </Button>
             </form>
-            <Box sx={{ textAlign: 'center', marginTop: 2 }}>
+            <Box sx={{ textAlign: "center", marginTop: 2 }}>
               <Typography variant="body2">
-                Don't have an account?{' '}
-                <Link to="/register" style={{ textDecoration: 'none', color: theme.palette.primary.main }}>
+                Don't have an account?{" "}
+                <Typography
+                  component={Link}
+                  to="/register"
+                  sx={{ textDecoration: "none", color: "primary.main" }}
+                >
                   Register here
-                </Link>
+                </Typography>
               </Typography>
             </Box>
           </Box>

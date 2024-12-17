@@ -1,179 +1,191 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, Container, Paper, Grid, IconButton } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { motion } from 'framer-motion'; // Import Framer Motion
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import React, { useEffect } from 'react';
+import { Box, Typography, Button, Container, Grid, Card, CardContent, CardActionArea } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
+import { useTheme } from '../utilities/theme/ThemeContext'; // Import useTheme from the global theme context
+import { lightTheme, darkTheme } from '../utilities/theme/theme'; // Import themes
+import Header from '../utilities/Header'; // Import Header component
 import MovieIcon from '@mui/icons-material/Movie';
-import StarBorderPurple500Icon from '@mui/icons-material/StarBorderPurple500';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import { motion } from 'framer-motion'; // Importing framer-motion for animations
+import { ThemeProvider } from '@mui/material/styles';
+import { jwtDecode } from 'jwt-decode';
 
-// Create a custom theme using Tiffany's palette
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#0abab5', // Tiffany Blue
-      light: '#5fe2db', // Light Tiffany Blue
-      dark: '#0a8680', // Dark Tiffany Blue
-    },
-    background: {
-      default: '#000000', // Black background
-    },
-    text: {
-      primary: '#ffffff', // White text
-      secondary: '#0abab5', // Tiffany accent text
-    },
-  },
-  typography: {
-    fontFamily: 'Roboto, sans-serif',
-  },
-});
 
 const LandingPage = () => {
+  const { isDarkMode, toggleTheme } = useTheme(); // Get the current theme state from context
+  const navigate = useNavigate(); // Hook for navigation
+
+  // Fade-in animation variants using framer-motion
+  const cardVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
+  // Function to check if the token is valid
+  const checkTokenValidity = (token) => {
+    if (!token) return false;
+  
+    try {
+      const decodedToken = jwtDecode(token); // Decode the token
+      const currentTime = Date.now() / 1000; // Current time in seconds
+  
+      // Check if the token was issued within the last 1 hour (3600 seconds)
+      const isTokenValid = currentTime - decodedToken.iat <= 3600;
+  
+      return isTokenValid; // Return whether the token is valid within the last hour
+    } catch (error) {
+      console.error('Invalid token', error);
+      return false; // Token is invalid
+    }
+  };
+  
+
+  // Check if the user is already logged in (i.e., token exists in localStorage and is valid)
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token && checkTokenValidity(token)) {
+      // If a valid token exists, redirect to Dashboard
+      navigate('/dashboard');
+    }
+  }, [navigate]); // Re-run effect if navigate changes
+
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', color: 'text.primary', position: 'relative' }}>
-        {/* Radial Background Effect */}
-        <div className="background-effect" />
-
-        {/* AppBar for navigation */}
-        <AppBar position="static" color="primary" sx={{ padding: 2 }}>
-          <Toolbar>
-            <Typography variant="h3" style={{ fontFamily: 'Times New Roman, serif' }} sx={{ flexGrow: 1 }}>
-              CineSphere
-            </Typography>
-
-            {/* Login Button */}
-            <Link to="/login">
-              <Button
-                color="primary"
-                variant="contained"
-                size="large"
-                sx={{
-                  marginLeft: 2,
-                  border: '2px solid black',
-                  borderRadius: '4px',
-                }}
-              >
+    <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+      <Header isDarkMode={isDarkMode} onToggleTheme={toggleTheme} />
+      <Box
+        sx={{
+          minHeight: '90vh',
+          bgcolor: 'background.default',
+          color: 'text.primary',
+          justifyContent: 'center',
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <Container
+          sx={{
+            bgcolor: 'background.default',
+            color: 'text.primary',
+            justifyContent: 'center',
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <Typography variant="h2" gutterBottom>
+            Welcome to CineSphere
+          </Typography>
+          <Typography variant="h5" sx={{ marginBottom: 4 }}>
+            Join us to explore the world of movies and entertainment.
+          </Typography>
+          <Box>
+            <Link to="/register" style={{ textDecoration: 'none' }}>
+              <Button variant="contained" color="primary" sx={{ marginRight: 2 }}>
+                Register
+              </Button>
+            </Link>
+            <Link to="/login" style={{ textDecoration: 'none' }}>
+              <Button variant="outlined" color="primary">
                 Login
               </Button>
             </Link>
+          </Box>
 
-            {/* Sign Up Button - Link to RegisterPage */}
-            <Link to="/register">
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                sx={{
-                  marginLeft: 2,
-                  border: '2px solid black',
-                  borderRadius: '4px',
-                }}
-              >
-                Sign Up
-              </Button>
-            </Link>
-          </Toolbar>
-        </AppBar>
-
-        {/* Hero Section with Animation */}
-        <Box sx={{ padding: 4, textAlign: 'center', flexGrow: 1 }}>
-          <Container>
-            <motion.div
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1 }}
-            >
-              <Typography variant="h2" style={{ fontFamily: 'Lucida Sans, serif' }} sx={{ fontWeight: 'bold', marginBottom: 2 }}>
-                Welcome to CineSphere
-              </Typography>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1.5 }}
-            >
-              <Typography variant="h5" style={{ fontFamily: 'Lucida Sans, serif' }} sx={{ marginBottom: 4 }}>
-                Discover, track, and review your favorite movies.
-              </Typography>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 2 }}
-            >
-              <Button variant="contained" color="primary" size="large" sx={{ marginRight: 2 }}>
-                Get Started
-              </Button>
-              <Button variant="outlined" color="primary" size="large">
-                Learn More
-              </Button>
-            </motion.div>
-          </Container>
-        </Box>
-
-        {/* Feature Boxes */}
-        <Box sx={{ padding: 4, display: 'flex', justifyContent: 'center' }}>
-          <Grid container spacing={4}>
+          {/* Cards Section */}
+          <Grid container spacing={4} sx={{ marginTop: 6 }}>
+            {/* Movie Tracking Card */}
             <Grid item xs={12} sm={4}>
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1 }}
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{ duration: 0.6 }} // Animation duration
               >
-                <Paper sx={{ padding: 4, textAlign: 'center', bgcolor: '#1a1a1a' }}>
-                  <IconButton color="primary" sx={{ fontSize: 60 }}>
-                    <MovieIcon fontSize="inherit" />
-                  </IconButton>
-                  <Typography style={{ fontFamily: 'Times New Roman, serif' }} variant="h6" sx={{ marginTop: 2 }}>
-                    Track Movies
-                  </Typography>
-                  <Typography style={{ fontFamily: 'Times New Roman, serif' }} variant="body2">
-                    Stay updated with your watchlist and upcoming releases.
-                  </Typography>
-                </Paper>
+                <Card
+                  sx={{
+                    height: '100%',
+                    bgcolor: isDarkMode ? '#1c1c1c' : '#ffffff', // Card background color based on the theme
+                    color: isDarkMode ? 'text.primary' : 'text.primary', // Card text color based on the theme
+                  }}
+                >
+                  <CardActionArea>
+                    <CardContent>
+                      <MovieIcon sx={{ fontSize: 40, color: 'primary.main', marginBottom: 2 }} />
+                      <Typography variant="h6" component="div" sx={{ marginBottom: 2 }}>
+                        Movie Tracking
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Keep track of the movies you've watched and get insights on your viewing habits.
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
               </motion.div>
             </Grid>
+
+            {/* Movie Analytics Card */}
             <Grid item xs={12} sm={4}>
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1.5 }}
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{ duration: 0.6 }} // Animation duration
               >
-                <Paper sx={{ padding: 4, textAlign: 'center', bgcolor: '#1a1a1a' }}>
-                  <IconButton color="primary" sx={{ fontSize: 60 }}>
-                    <StarBorderPurple500Icon fontSize="inherit" />
-                  </IconButton>
-                  <Typography style={{ fontFamily: 'Times New Roman, serif' }} variant="h6" sx={{ marginTop: 2 }}>
-                    Write Reviews
-                  </Typography>
-                  <Typography style={{ fontFamily: 'Times New Roman, serif' }} variant="body2">
-                    Share your thoughts and read reviews from others.
-                  </Typography>
-                </Paper>
+                <Card
+                  sx={{
+                    height: '100%',
+                    bgcolor: isDarkMode ? '#1c1c1c' : '#ffffff', // Card background color based on the theme
+                    color: isDarkMode ? 'text.primary' : 'text.primary', // Card text color based on the theme
+                  }}
+                >
+                  <CardActionArea>
+                    <CardContent>
+                      <BarChartIcon sx={{ fontSize: 40, color: 'primary.main', marginBottom: 2 }} />
+                      <Typography variant="h6" component="div" sx={{ marginBottom: 2 }}>
+                        Movie Analytics
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Dive deep into movie trends, ratings, and your personal analytics.
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
               </motion.div>
             </Grid>
+
+            {/* Movie Recommendations Card */}
             <Grid item xs={12} sm={4}>
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 2 }}
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{ duration: 0.6 }} // Animation duration
               >
-                <Paper sx={{ padding: 4, textAlign: 'center', bgcolor: '#1a1a1a' }}>
-                  <IconButton color="primary" sx={{ fontSize: 60 }}>
-                    <BarChartIcon fontSize="inherit" />
-                  </IconButton>
-                  <Typography style={{ fontFamily: 'Times New Roman, serif' }} variant="h6" sx={{ marginTop: 2 }}>
-                    Analytics
-                  </Typography>
-                  <Typography style={{ fontFamily: 'Times New Roman, serif' }} variant="body2">
-                    Discover trends and insights about your favorite genres and actors.
-                  </Typography>
-                </Paper>
+                <Card
+                  sx={{
+                    height: '100%',
+                    bgcolor: isDarkMode ? '#1c1c1c' : '#ffffff', // Card background color based on the theme
+                    color: isDarkMode ? 'text.primary' : 'text.primary', // Card text color based on the theme
+                  }}
+                >
+                  <CardActionArea>
+                    <CardContent>
+                      <StarBorderIcon sx={{ fontSize: 40, color: 'primary.main', marginBottom: 2 }} />
+                      <Typography variant="h6" component="div" sx={{ marginBottom: 2 }}>
+                        Movie Recommendations
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Get movie recommendations based on your preferences and viewing history.
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
               </motion.div>
             </Grid>
           </Grid>
-        </Box>
+        </Container>
       </Box>
     </ThemeProvider>
   );
