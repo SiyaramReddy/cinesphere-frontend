@@ -1,12 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LandingPage from './components/LandingPage';
-import RegisterPage from './components/RegisterPage';
-import LoginPage from './components/LoginPage';
-import NotFoundPage from './utilities/NotFoundPage';
+import LandingPage from './pages/LandingPage';
+import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/LoginPage';
+import NotFoundPage from './pages/NotFoundPage';
 import { ThemeProvider, useTheme } from './utilities/theme/ThemeContext';
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkTheme } from './utilities/theme/theme';
+import HomePage from './pages/HomePage';
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const MainApp = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>
