@@ -4,12 +4,15 @@ import { Link, useNavigate } from 'react-router-dom'; // Import Link for navigat
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import MovieIcon from '@mui/icons-material/Movie';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import Avatar from '@mui/material/Avatar';
+import { useTheme } from '@mui/material/styles';
+import { useTheme as useCustomTheme } from '../utilities/theme/ThemeContext'; // Import custom theme context
 
-const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }) => {
+const Header = ({ isLoggedIn }) => {
+  const theme = useTheme();
+  const { isDarkMode, toggleTheme } = useCustomTheme(); // Use custom theme context
   const [anchorEl, setAnchorEl] = useState(null); // State to manage the profile dropdown
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false); // State to manage logout confirmation dialog
   const pfp = localStorage.getItem('pfp');
@@ -38,7 +41,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }) => {
     localStorage.removeItem('pfp');
 
     // Make a call to logout API (adjust URL if needed)
-    await fetch('http://localhost:3000/auth/logout', {
+    await fetch('http://localhost:5000/auth/logout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -59,8 +62,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }) => {
       position="static"
       elevation={0}
       sx={{
-        bgcolor: isLoggedIn ? (isDarkMode ? 'primary.main' : '#0abab5') : '#0abab5',
-        color: isLoggedIn ? 'text.primary' : '#ffffff',
+        bgcolor: theme.palette.primary.main
       }}
     >
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -70,7 +72,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }) => {
             variant="h6"
             sx={{
               fontFamily: 'Orbitron, sans-serif',
-              color: isLoggedIn ? 'text.primary' : '#ffffff',
+              color: isLoggedIn ? theme.palette.text.primary : '#ffffff',
             }}
           >
             CineSphere
@@ -84,7 +86,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }) => {
               display: 'flex',
               alignItems: 'center',
               width: '40%',
-              bgcolor: 'background.paper',
+              bgcolor: theme.palette.background.paper,
               borderRadius: 1,
               paddingX: 1,
               marginLeft: 2, // Adding space between the brand and search bar
@@ -94,7 +96,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }) => {
               placeholder="Search movies, genres, or actors..."
               sx={{
                 width: '100%',
-                color: 'text.primary',
+                color: theme.palette.text.primary,
               }}
             />
           </Box>
@@ -105,33 +107,63 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }) => {
           {isLoggedIn && (
             <>
               {/* Favourites */}
-              <IconButton component={Link} to="/favourites" color="inherit" sx={{ display: 'flex', flexDirection: 'column' }}>
-                <FavoriteIcon />
-                <Typography variant="caption" sx={{ color: 'text.primary' }}>
+              <IconButton
+                component={Link}
+                to="/favourites"
+                color="inherit"
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  '&:hover .MuiSvgIcon-root': {
+                    transform: 'scale(1.10)', // Apply simple scaling on hover
+                    transition: 'transform 0.3s ease', // Smooth transition for scaling
+                  },
+                }}
+              >
+                <FavoriteIcon sx={{ color: theme.palette.text.primary }} />
+                <Typography variant="caption" sx={{ color: theme.palette.text.primary }}>
                   Favourites
                 </Typography>
               </IconButton>
 
-              {/* My Movies */}
-              <IconButton component={Link} to="/my-movies" color="inherit" sx={{ display: 'flex', flexDirection: 'column' }}>
-                <MovieIcon />
-                <Typography variant="caption" sx={{ color: 'text.primary' }}>
-                  My Movies
-                </Typography>
-              </IconButton>
+              
 
               {/* Watchlist */}
-              <IconButton component={Link} to="/watchlist" color="inherit" sx={{ display: 'flex', flexDirection: 'column' }}>
-                <ListAltIcon />
-                <Typography variant="caption" sx={{ color: 'text.primary' }}>
+              <IconButton
+                component={Link}
+                to="/watchlist"
+                color="inherit"
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  '&:hover .MuiSvgIcon-root': {
+                    transform: 'scale(1.10)', // Apply simple scaling on hover
+                    transition: 'transform 0.3s ease', // Smooth transition for scaling
+                  },
+                }}
+              >
+                <ListAltIcon sx={{ color: theme.palette.text.primary }} />
+                <Typography variant="caption" sx={{ color: theme.palette.text.primary }}>
                   Watchlist
                 </Typography>
               </IconButton>
 
               {/* Reviews */}
-              <IconButton component={Link} to="/reviews" color="inherit" sx={{ display: 'flex', flexDirection: 'column' }}>
-                <RateReviewIcon />
-                <Typography variant="caption" sx={{ color: 'text.primary' }}>
+              <IconButton
+                component={Link}
+                to="/reviews"
+                color="inherit"
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  '&:hover .MuiSvgIcon-root': {
+                    transform: 'scale(1.10)', // Apply simple scaling on hover
+                    transition: 'transform 0.3s ease', // Smooth transition for scaling
+                  },
+                }}
+              >
+                <RateReviewIcon sx={{ color: theme.palette.text.primary }} />
+                <Typography variant="caption" sx={{ color: theme.palette.text.primary }}>
                   Reviews
                 </Typography>
               </IconButton>
@@ -139,7 +171,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }) => {
           )}
 
           {/* Theme Toggle Button (Always Visible) */}
-          <IconButton onClick={onToggleTheme} sx={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}>
+          <IconButton onClick={toggleTheme} sx={{ color: theme.palette.text.primary }}>
             {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
 
@@ -177,7 +209,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }) => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleLogoutCancel} color="primary">
+          <Button onClick={handleLogoutCancel} color="primary" >
             No
           </Button>
           <Button onClick={handleLogoutConfirm} color="primary">

@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import Header from '../components/Header';
 import Sidebar from '../components/SideBar'; // Import Left Sidebar component
-import { useTheme } from '../utilities/theme/ThemeContext';
+import { useTheme } from '../utilities/theme/ThemeContext'; // Import custom theme context
 
 const HomePage = () => {
-  const { isDarkMode, toggleTheme } = useTheme(); // Get toggleTheme function from useTheme
+  const { isDarkMode } = useTheme(); // Get theme context
   const [selectedButton, setSelectedButton] = useState('Today'); // State to track selected button
 
   // Function to handle button click and set the selected button
@@ -16,7 +16,7 @@ const HomePage = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       {/* Header */}
-      <Header isLoggedIn={true} onToggleTheme={toggleTheme} isDarkMode={isDarkMode} />
+      <Header isLoggedIn={true} />
 
       {/* Main Content */}
       <Box sx={{ display: 'flex', flex: 1 }}>
@@ -24,7 +24,7 @@ const HomePage = () => {
         <Sidebar
           sx={{
             width: '15%',
-            bgcolor: isDarkMode ? 'background.default' : '#e0f7fa',
+            bgcolor: 'background.default',
             borderRight: `1px solid ${isDarkMode ? '#424242' : '#e0e0e0'}`,
             padding: 2,
           }}
@@ -34,7 +34,7 @@ const HomePage = () => {
         <Box
           sx={{
             flex: 1,
-            bgcolor: isDarkMode ? 'background.paper' : '#ffffff',
+            bgcolor: 'background.paper',
             padding: 2,
             display: 'flex',
             flexDirection: 'column',
@@ -73,7 +73,7 @@ const HomePage = () => {
           </Box>
 
           {/* Trending Content Placeholder */}
-          <Typography variant="body1">
+          <Typography variant="body1" sx={{ color: 'text.primary' }}>
             Display trending movies, series, or recommendations here.
           </Typography>
         </Box>

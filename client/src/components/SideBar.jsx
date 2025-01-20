@@ -5,9 +5,14 @@ import HomeIcon from '@mui/icons-material/Home';
 import EqualizerIcon from '@mui/icons-material/Equalizer'; // For Analytics
 import StarIcon from '@mui/icons-material/Star'; // For Recommendations
 
-const Sidebar = (props) => {
+const Sidebar = () => {
   return (
-    <Box {...props}>
+    <Box sx={{
+      width: '15%',
+      bgcolor: 'background.default',
+      borderRight: `2px solid text.primary`,
+      padding: 2,
+    }}>
       <Typography variant="h6" sx={{ marginBottom: 2 , color:'text.primary'}}>
         Menu
       </Typography>

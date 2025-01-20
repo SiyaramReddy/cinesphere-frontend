@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Box, Typography, Container } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import { ThemeProvider } from '@mui/material/styles';
-import { lightTheme, darkTheme } from '../utilities/theme/theme'; // Import themes
 import Header from '../components/Header'; // Import Header component
 import { useTheme } from '../utilities/theme/ThemeContext'; // Import useTheme from global context
 import axios from 'axios';
 
 const LoginPage = () => {
-  const { isDarkMode, toggleTheme } = useTheme(); // Access theme context
+  const { isDarkMode } = useTheme(); // Access theme context
   const navigate = useNavigate(); // Use navigate hook to redirect after login
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -46,8 +44,8 @@ const LoginPage = () => {
       
       // Store authentication token in localStorage (or cookies/session)
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('pfp', response.data.data.profilePicture);
-
+      localStorage.setItem('pfp', response.data.data.profile_picture);
+      
 
       // Redirect to a different page (e.g., home/dashboard) upon success
       setTimeout(() => navigate('/home'), 1000); // Redirect after 2 seconds
@@ -60,8 +58,8 @@ const LoginPage = () => {
   };
 
   return (
-    <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
-      <Header isDarkMode={isDarkMode} onToggleTheme={toggleTheme} />
+    <>
+      <Header />
       <Box
         sx={{
           minHeight: "90vh",
@@ -149,7 +147,7 @@ const LoginPage = () => {
           </Box>
         </Container>
       </Box>
-    </ThemeProvider>
+      </>
   );
 };
 
