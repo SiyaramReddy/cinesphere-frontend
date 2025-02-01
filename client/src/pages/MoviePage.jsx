@@ -276,14 +276,18 @@ tick={{ fill: theme.palette.text.primary }}
             Add a Review
           </Typography>
           <Rating
-            name="review-rating"
-            value={reviewRating}
-            onChange={(event, newValue) => setReviewRating(newValue)}
-            precision={0.5}
-            sx={{ mb: 2 }}
-          />
+  name="review-rating"
+  value={reviewRating}
+  onChange={(event, newValue) => setReviewRating(newValue)}
+  precision={0.5}
+  sx={{
+    mb: 2,
+    color: theme.palette.primary.main, // Set the primary color here
+  }}
+/>
+
           <TextField
-            label="Review"
+            label="Review"  
             multiline
             rows={4}
             value={reviewText}
