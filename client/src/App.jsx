@@ -11,6 +11,9 @@ import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
 import PrivateRoute from './utilities/PrivateRoute'; // Import the PrivateRoute component
 import MoviePage from './pages/MoviePage';
+import Watchlist from './pages/Watchlist';
+import Favorites from './pages/Favorites';
+import ReviewPage from './pages/ReviewPage';
 
 const App = () => {
   return (
@@ -37,6 +40,9 @@ const MainApp = () => {
           <Route path="/home" element={<PrivateRoute element={<HomePage />} />} />
           <Route path="/profile" element={<PrivateRoute element={<ProfilePage />} />} />
           <Route path="/movie/:id" element={<PrivateRoute element={<MoviePage />} />} />
+          <Route path="/watchlist" element={<PrivateRoute element={<Watchlist />} />} />
+          <Route path="/favourites" element={<PrivateRoute element={<Favorites />} />} />
+          <Route path="/reviews" element={<PrivateRoute element={<ReviewPage />} />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>
