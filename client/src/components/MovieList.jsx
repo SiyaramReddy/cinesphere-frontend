@@ -5,7 +5,7 @@ import MovieCard from './MovieCard';
 const MovieList = ({ movies, page, totalPages, onPageChange }) => {
   return (
     <Box sx={{ p: 3 }}>
-      <Grid container spacing={2} justifyContent="center">
+      <Grid container spacing={2} justifyContent="flex-start">
         {movies.map((movie, index) => (
           <Grid item key={movie.id} xs={6} sm={4} md={3} lg={3} xl={3}>
             <MovieCard movie={movie} />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, CircularProgress, FormControl, InputLabel, Select, MenuItem, Grid } from '@mui/material';
+import { Box, Typography, CircularProgress, FormControl, InputLabel, Select, MenuItem, Grid, Pagination } from '@mui/material';
 import axios from '../utilities/axiosInstance';
 import MovieReviewCard from '../components/MovieReviewCard';
 import Sidebar from '../components/SideBar'; // Assuming you have a Sidebar component
@@ -13,13 +13,16 @@ const ReviewPage = () => {
   const [error, setError] = useState(null);
   const [sort, setSort] = useState('movieTitle');
   const [filter, setFilter] = useState('all');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const fetchReviews = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`/reviews?sort=${sort}&filter=${filter}`);
+        const response = await axios.get(`reviews?sort=${sort}&filter=${filter}&page=${page}`);
         setReviews(response.data.reviews[0]);
+        setTotalPages(response.data.totalPages);
         setLoading(false);
       } catch (error) {
         setError('Error fetching reviews');
@@ -28,7 +31,7 @@ const ReviewPage = () => {
     };
 
     fetchReviews();
-  }, [sort, filter]);
+  }, [sort, filter, page]);
 
   const handleSaveReview = async (editedReview) => {
     try {
@@ -49,6 +52,10 @@ const ReviewPage = () => {
     setFilter(event.target.value);
   };
 
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+
   return (
     <>
       <Header isLoggedIn={true} />
@@ -60,7 +67,7 @@ const ReviewPage = () => {
           padding: 2,
         }} />
         <Box sx={{ flex: 1, p: 3 }}>
-          <Typography variant="h4" sx={{ mb: 3 }}>
+          <Typography variant="h4" sx={{ mb: 3 , color: theme.palette.text.primary, fontWeight: 'bold' }}>
             My Reviews
           </Typography>
           <Grid container spacing={2} sx={{ mb: 3 }}>
@@ -98,9 +105,18 @@ const ReviewPage = () => {
               No reviews found.
             </Typography>
           ) : (
-            reviews.map((review) => (
-              <MovieReviewCard key={review.id} review={review} onSave={handleSaveReview} />
-            ))
+            <>
+              <Grid container spacing={2}>
+                {reviews.map((review) => (
+                  <Grid item key={review.id} xs={12} sm={6} md={6} lg={6}>
+                    <MovieReviewCard review={review} onSave={handleSaveReview} />
+                  </Grid>
+                ))}
+              </Grid>
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+                <Pagination count={totalPages} page={page} onChange={handlePageChange} />
+              </Box>
+            </>
           )}
         </Box>
       </Box>

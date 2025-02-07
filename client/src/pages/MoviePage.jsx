@@ -6,7 +6,6 @@ import {
   Container,
   Grid,
   CardMedia,
-  Divider,
   Rating,
   Modal,
   TextField,
@@ -14,7 +13,7 @@ import {
 import axios from '../utilities/axiosInstance';
 
 import { useTheme } from "@mui/material/styles";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Header from "../components/Header";
 import Sidebar from "../components/SideBar";
 import AddIcon from "@mui/icons-material/Add";
@@ -197,7 +196,7 @@ console.log(ratingsData);
 dataKey="rating"
 type="number"
 domain={[0, 5]}
-ticks={[0, ,,, , 2.5, , , ,, 5]} // Explicitly set the tick values
+ticks={[0,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5]} // Explicitly set the tick values
 tick={{ fill: theme.palette.text.primary }}
 />
 
@@ -249,7 +248,7 @@ tick={{ fill: theme.palette.text.primary }}
 
                 <Typography variant="h6" sx={{ color: theme.palette.text.primary, mb: 2, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                   Recent Reviews
-                  <Button size="small" variant="contained" color="primary">
+                  <Button component={Link} to={`/movie/${id}/reviews`} size="small" variant="contained" color="primary">
                     Show All
                   </Button>
                 </Typography>

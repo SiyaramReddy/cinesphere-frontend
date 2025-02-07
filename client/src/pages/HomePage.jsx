@@ -8,7 +8,7 @@ import { useTheme } from '@mui/material/styles';
 
 const HomePage = () => {
   const theme = useTheme();
-  const [selectedButton, setSelectedButton] = useState('T');
+  const [selectedButton, setSelectedButton] = useState('Today');
   const [trendingMovies, setTrendingMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,34 +40,37 @@ const HomePage = () => {
         <Sidebar sx={{
           width: '15%',
           bgcolor: theme.palette.background.default,
-          borderRight: `1px solid ${theme.palette.mode === 'dark' ? '#424242' : '#e0e0e0'}`,
+          borderRight: `1px solid ${theme.palette.mode === 'dark' ? '#ffffff' : '#ffffff'}`,
           padding: 2,
         }} />
         <Box sx={{ flex: 1, p: 3 }}>
-          <Typography variant="h4" sx={{ mb: 3 }}>
+          <Typography variant="h4" sx={{ mb: 3, color: theme.palette.text.primary, fontWeight: 'bold' }}>
             Trending Movies
           </Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
             <Button
-              variant={selectedButton === 'T' ? 'contained' : 'outlined'}
+              variant={selectedButton === 'Today' ? 'contained' : 'outlined'}
               color="primary"
-              onClick={() => handleButtonClick('T')}
+              onClick={() => handleButtonClick('Today')}
+              sx={{ mx: 1 }}
             >
               Today
             </Button>
             <Button
-              variant={selectedButton === 'W' ? 'contained' : 'outlined'}
+              variant={selectedButton === 'Week' ? 'contained' : 'outlined'}
               color="primary"
-              onClick={() => handleButtonClick('W')}
+              onClick={() => handleButtonClick('Week')}
+              sx={{ mx: 1 }}
             >
-              This Week
+              Week
             </Button>
             <Button
-              variant={selectedButton === 'M' ? 'contained' : 'outlined'}
+              variant={selectedButton === 'Month' ? 'contained' : 'outlined'}
               color="primary"
-              onClick={() => handleButtonClick('M')}
+              onClick={() => handleButtonClick('Month')}
+              sx={{ mx: 1 }}
             >
-              This Month
+              Month
             </Button>
           </Box>
 
@@ -82,13 +85,29 @@ const HomePage = () => {
           ) : (
             <Grid container spacing={2}>
               {trendingMovies.map((movie, index) => (
-                <Grid item key={movie.id} xs={12} sm={6} md={4} lg={3}>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Typography variant="h6" sx={{ mr: 2 }}>
-                      {index + 1}.
+                <Grid item key={movie.id} xs={12} sm={6} md={4} lg={2.3}>
+                 
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        right: 8,
+                        bottom: 8,
+                        bgcolor: theme.palette.primary.main,
+                        color: theme.palette.primary.contrastText,
+                        borderRadius: '50%',
+                        width: 24,
+                        height: 24,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {index + 1}
                     </Typography>
-                    <MovieCard movie={movie} />
-                  </Box>
+                    <MovieCard movie={movie} sx={{ height: '50%',width:'50%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }} />
+            
+                 
                 </Grid>
               ))}
             </Grid>

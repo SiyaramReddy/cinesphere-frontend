@@ -4,20 +4,21 @@ import { Link } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import EqualizerIcon from '@mui/icons-material/Equalizer'; // For Analytics
 import StarIcon from '@mui/icons-material/Star'; // For Recommendations
-
+import { useTheme } from '@mui/material/styles';
 const Sidebar = () => {
+  const theme=useTheme();
   return (
     <Box sx={{
       width: '15%',
-      bgcolor: 'background.default',
-      borderRight: `2px solid text.primary`,
+      bgcolor: theme.palette.background.default,
+      borderRight: `1px solid ${theme.palette.mode === 'dark' ? '#424242' : '#e0e0e0'}`,
       padding: 2,
-    }}>
+    }} >
       <Typography variant="h6" sx={{ marginBottom: 2 , color:'text.primary'}}>
         Menu
       </Typography>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <Link to="/" style={{ textDecoration: 'none' }}>
+        <Link to="/home" style={{ textDecoration: 'none' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <IconButton sx={{ color: 'text.primary' }}>
               <HomeIcon />

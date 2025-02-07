@@ -47,7 +47,7 @@ const MovieCard = ({ movie }) => {
           <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
             <Rating value={parseFloat(movie.rating).toFixed(1)} precision={0.1} readOnly sx={{ color: theme.palette.primary.main }} />
             <Typography variant="body2" sx={{ ml: 1, color: theme.palette.text.secondary }}>
-              {parseFloat(movie.rating).toFixed(1)}
+              {movie.rating ? parseFloat(movie.rating).toFixed(1) : '0.0'}
             </Typography>
           </Box>
           <Typography variant="body2" sx={{ mt: 1, color: theme.palette.text.secondary }}>
