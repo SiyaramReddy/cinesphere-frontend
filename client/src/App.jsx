@@ -16,6 +16,8 @@ import Favorites from './pages/Favorites';
 import ReviewPage from './pages/ReviewPage';
 import SearchResultPage from './pages/SearchResultPage';
 import MovieReviewPage from './pages/MovieReviewPage';
+import RecommendationPage from './pages/RecommendationPage';
+import AnalyticsPage from './pages/AnalyticsPage';
 
 const App = () => {
   return (
@@ -47,7 +49,8 @@ const MainApp = () => {
           <Route path="/favourites" element={<PrivateRoute element={<Favorites />} />} />
           <Route path="/reviews" element={<PrivateRoute element={<ReviewPage />} />} />
           <Route path="/search" element={<PrivateRoute element={<SearchResultPage />} />} />
-
+          <Route path="/analytics" element={<PrivateRoute element={<AnalyticsPage />} />} />
+          <Route path="/recommendations" element={<RecommendationPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>

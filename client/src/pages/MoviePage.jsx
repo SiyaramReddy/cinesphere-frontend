@@ -29,6 +29,7 @@ const MoviePage = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [providers, setProviders] = useState([]);
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [openReviewModal, setOpenReviewModal] = useState(false);
@@ -41,8 +42,9 @@ const MoviePage = () => {
         const response = await axios.get(`/movie/${id}`);
         const data = response.data; // Axios automatically parses the response as JSON
         console.log(data);
-        setMovie(data);
-        setReviews(data.reviews || []);
+        setMovie(data.movie);
+        setReviews(data.movie.reviews || []);
+        setProviders(data.providers || []);
       } catch (error) {
         console.log('Error fetching movie details:', error);
       }
@@ -259,6 +261,31 @@ tick={{ fill: theme.palette.text.primary }}
                   ) : (
                     <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
                       Be the first one to review!
+                    </Typography>
+                  )}
+                </Box>
+
+                <Typography variant="h6" sx={{ color: theme.palette.text.primary, mt: 3 }}>
+                  Available On
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
+                  {providers && providers.length > 0 ? (
+                    providers.map((provider, index) => (
+                      <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <CardMedia
+                          component="img"
+                          image={`https://image.tmdb.org/t/p/w500${provider.provider_logo}`}
+                          alt={provider.provider_name}
+                          sx={{ width: 40, height: 40, borderRadius: '50%' }}
+                        />
+                        <Typography variant="body2" sx={{ color: theme.palette.text.primary }}>
+                          {provider.provider_name}
+                        </Typography>
+                      </Box>
+                    ))
+                  ) : (
+                    <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
+                      No providers available.
                     </Typography>
                   )}
                 </Box>

@@ -18,7 +18,7 @@ const Header = ({ isLoggedIn }) => {
   const [anchorEl, setAnchorEl] = useState(null); // State to manage the profile dropdown
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false); // State to manage logout confirmation dialog
   const [searchQuery, setSearchQuery] = useState('');
-  const [yearRange, setYearRange] = useState([1900, 2023]);
+  const [yearRange, setYearRange] = useState([1900, new Date().getFullYear()]);
   const [genres, setGenres] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [filterAnchorEl, setFilterAnchorEl] = useState(null); // State to manage the filter dropdown
@@ -89,7 +89,7 @@ const Header = ({ isLoggedIn }) => {
     navigate('/search', { state: { searchQuery, yearRange, genres, languages } });
   };
 
-  // Open the filter dropdown
+  // Open the filter dropdownf
   const handleFilterClick = (event) => {
     setFilterAnchorEl(event.currentTarget);
   };
@@ -102,7 +102,7 @@ const Header = ({ isLoggedIn }) => {
   // Handle clear filters
   const handleClearFilters = () => {
     setSearchQuery('');
-    setYearRange([1900, 2023]);
+    setYearRange([1900, new Date().getFullYear()]);
     setGenres([]);
     setLanguages([]);
     handleFilterClose();
@@ -279,7 +279,7 @@ const Header = ({ isLoggedIn }) => {
               onChange={handleYearChange}
               valueLabelDisplay="auto"
               min={1900}
-              max={2023}
+              max={new Date().getFullYear()}
             />
           </Box>
           <FormControl sx={{ minWidth: 200, mb: 2 }}>
